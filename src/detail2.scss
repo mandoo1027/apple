@@ -1,0 +1,16 @@
+ .my-alert{
+    padding : 20px;
+    font-size : 25px;
+    background-color: #eeeeee;
+    max-width: 500px;
+    width: 100%;
+    margin : auto;
+ }
+ .my-alert p{ 
+    margin-bottom: 0;
+    
+ }
+ .my-alert2{
+     @extend .my-alert;
+     background-color: #ffe591;;
+ }

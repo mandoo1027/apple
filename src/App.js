@@ -5,6 +5,7 @@ import {useState} from 'react'
 import './App.css';
 import list from './data'
 import { Link, Route, Switch } from 'react-router-dom'
+import axios from 'axios'
 
 import Main from './page/Main'
 import Detail from './page/Detail'
@@ -22,8 +23,8 @@ function App() {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
-              <Nav.Link ><Link to="/">Home</Link></Nav.Link>
-              <Nav.Link ><Link to="/detail">Detail</Link></Nav.Link>
+              <Nav.Link as={Link} to="/">Home</Nav.Link>
+              <Nav.Link as={Link} to="/detail">Detail</Nav.Link>
               <NavDropdown title="Dropdown" id="basic-nav-dropdown">
                 <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
                 <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
@@ -45,6 +46,25 @@ function App() {
       <Switch>
         <Route exact  path="/">
           <Main shoes={shoes}/>
+          <button className="btn btn-primary" onClick={()=>{
+            axios.get('https://codingapple1.github.io/shop/data2.json')
+            .then((result)=>{
+              
+              let copyList = _.cloneDeep(shoes)
+              const newData = result.data 
+              newData.map((data)=>{
+                
+                data.url = "https://codingapple1.github.io/shop/shoes2.jpg"
+                copyList.push(data)
+              })
+              
+              changeShoes(copyList)
+            })
+            .catch((e)=>{
+              console.log(e)
+            }) 
+
+          }}>더보기</button>
         </Route>
 
         <Route exact path="/detail/:id">
