@@ -1,18 +1,20 @@
 /* eslint-disable */
-import logo from './logo.svg';
-import { Navbar, Container , NavDropdown , Nav , Jumbotron ,Button} from 'react-bootstrap'
-import {useState} from 'react'
+import { Navbar, Container , NavDropdown , Nav , Jumbotron } from 'react-bootstrap'
+import React, {lazy, Suspense, useState} from 'react'
 import './App.css';
-import list from './data'
 import { Link, Route, Switch } from 'react-router-dom'
 import axios from 'axios'
 
-import Main from './page/Main'
-import Detail from './page/Detail'
+import Main from './page/Main' 
+let Detail  = lazy(()=>  import ( './page/Detail' ))
+import Cart from './page/Cart'
+import { connect } from 'react-redux';
+const _ = require("lodash");
 
-function App() {
+export let 재고context = React.createContext() 
 
-  let [ shoes, changeShoes] = useState(list)
+function App(props) {
+  let [재고,재고변경] = useState([10,11,12])
 
   return (
     <div className="App"> 
@@ -45,30 +47,35 @@ function App() {
 
       <Switch>
         <Route exact  path="/">
-          <Main shoes={shoes}/>
+            <Main />
           <button className="btn btn-primary" onClick={()=>{
             axios.get('https://codingapple1.github.io/shop/data2.json')
             .then((result)=>{
               
-              let copyList = _.cloneDeep(shoes)
               const newData = result.data 
               newData.map((data)=>{
                 
                 data.url = "https://codingapple1.github.io/shop/shoes2.jpg"
-                copyList.push(data)
               })
-              
-              changeShoes(copyList)
+              props.dispatch({type : 'addShoes' , data : [...newData]})
             })
-            .catch((e)=>{
-              console.log(e)
+            .catch((e)=>{ 
             }) 
 
           }}>더보기</button>
         </Route>
 
         <Route exact path="/detail/:id">
-          <Detail  shoes={shoes}/>
+          
+          <재고context.Provider value={재고}>
+            <Suspense fallback={<div>로딩중이에요</div>}>
+            <Detail  shoes={props.shoes} 재고변경={재고변경}/>
+            </Suspense>
+          </재고context.Provider>
+        </Route>
+
+        <Route exact path="/cart">
+            <Cart/>
         </Route>
  
       </Switch>
@@ -76,5 +83,10 @@ function App() {
   );
 }
  
+function bind(state){
+  return{
+    shose : state.reducerShoes
+  }
+}
 
-export default App;
+export default connect(bind)(App);

@@ -2,7 +2,6 @@
     padding : 20px;
     font-size : 25px;
     background-color: #eeeeee;
-    max-width: 500px;
     width: 100%;
     margin : auto;
  }
@@ -13,4 +12,16 @@
  .my-alert2{
      @extend .my-alert;
      background-color: #ffe591;;
+ }
+
+ .wow-enter{
+    opacity: 0;
+ }
+ 
+ .wow-enter-active{
+    opacity: 1;
+    transition: all 500ms;
+ }
+ .divPadding{
+    padding: 20px
  }
